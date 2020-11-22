@@ -12,8 +12,8 @@ class Main {
 
     String fracIn = in.nextLine();
 
-    if (fracIn == "quit") {
-      quit = false; //the way i have it, it crashed, but it still technically quits
+    if (fracIn.equals("quit")) {
+      break;
     }
     produceAnswer(fracIn);
 
@@ -38,7 +38,7 @@ class Main {
     String den1 = denominator(firOperand);
     String den2 = denominator(secOperand);
 
-    String nwd1 = "Whole number for first operand: " + who1 + " " + "Numerator: " + num1 + " " + "Denominator: " + den1;
+    String nwd1 = "Whole number for the first operand: " + who1 + " " + "Numerator: " + num1 + " " + "Denominator: " + den1;
     String nwd2 = "Whole number for the second operand: " + who2 + " " + "Numerator: " + num2 + " " + "Denominator: " + den2;
 
     System.out.println(nwd1);
@@ -52,41 +52,38 @@ class Main {
     int intDen1 = Integer.parseInt(den1);
     int intDen2 = Integer.parseInt(den2);
 
-    System.out.println(operator);
 
-    //having trouble with the else part
-    if (operator == "+") {
-      if (den1 == den2) {
+    if (operator.equals("+")) {
+      if (intDen1 == intDen2)
         addSameDen(intWho1, intWho2, intNum1, intNum2, intDen1, intDen2);
 
       else {
         addDifDen(intWho1, intWho2, intNum1, intNum2, intDen1, intDen2);
       }
     }
-  }
 
-    if (operator == "-") {
-      if (den1 == den2) {
+    if (operator.equals("-")) {
+      if (intDen1 == intDen2)
         subSameDen(intWho1, intWho2, intNum1, intNum2, intDen1, intDen2);
 
       else {
         subDifDen(intWho1, intWho2, intNum1, intNum2, intDen1, intDen2);
       }
     }
-  }
 
-    if (operator == "*") {
-        multiply(intWho1, intWho2, intNum1, intNum2, intDen1, intDen2);
-
-    else {
-        divide(intWho1, intWho2, intNum1, intNum2, intDen1, intDen2);
-      }
+    if (operator.equals("*")) {
+      multiply(intWho1, intWho2, intNum1, intNum2, intDen1, intDen2);
     }
+
+    if (operator.equals("/")) {
+      divide(intWho1, intWho2, intNum1, intNum2, intDen1, intDen2);
+    }
+
     return (nwd1);
   }
 
 
- //lines 61 - 88 came from Xin Bao so thanks to him
+ //lines 88 - 116 came from Xin Bao so thanks to him
  public static String whole(String equation) {
     if(equation.contains("_")) {
       return equation.substring(0, equation.indexOf("_"));
@@ -116,14 +113,15 @@ class Main {
     }
   }
 
-  //these methods are all for adding, subtracting, multiplying, and dividing
-  public static int addSameDen(int who1, int who2, int num1, int num2, int den1, int den2) {
+  //these methods (lines 118 - 193) are all for adding, subtracting, multiplying, and dividing
+  public static int addSameDen(int who1, int who2, int num1, int num2,int den1, int den2) {
     int impropNum1 = (den1 * who1) + num1; //i turn the numerator into an improper one
     int impropNum2 = (den2 * who2) + num2;
 
     int finalNum = impropNum1 + impropNum2;
 
     System.out.println("The result is: " + finalNum + "/" + den1);
+    simplify(finalNum, den1);
     return 0;
   }
 
@@ -138,6 +136,7 @@ class Main {
     int finalDen = den1 * den2;
 
     System.out.println("The result is: " + finalNum + "/" + finalDen);
+    simplify(finalNum, finalDen);
     return 0;
   }
 
@@ -148,6 +147,7 @@ class Main {
     int finalNum = impropNum1 - impropNum2;
 
     System.out.println("The result is: " + finalNum + "/" + den1);
+    simplify(finalNum, den1);
     return 0;
   }
 
@@ -162,6 +162,7 @@ class Main {
     int finalDen = den1 * den2;
 
     System.out.println("The result is: " + finalNum + "/" + finalDen);
+    simplify(finalNum, finalDen);
     return 0;
   }
 
@@ -173,6 +174,7 @@ class Main {
     int finalDen = den1 * den2;
 
     System.out.println("The result is: " + finalNum + "/" + finalDen);
+    simplify(finalNum, finalDen);
     return 0;
   }
 
@@ -184,6 +186,28 @@ class Main {
     int finalDen = impropNum2 * den1;
 
     System.out.println("The result is: " + finalNum + "/" + finalDen);
+    simplify(finalNum, finalDen);
     return 0;
+  }
+
+//this method simplifies each fraction that can be simplified and displays the new fraction
+  public static int simplify(int finalNum, int finalDen) {
+
+    int gcd = 1;
+
+    for (int i = 1; i <= finalDen && i <= finalDen; i++) {
+
+      if (finalNum % i == 0 && finalDen % i == 0)
+        gcd = i;
+    }
+
+    System.out.println("The GCD is: " + gcd);
+
+    int newFinalNum = finalNum / gcd;
+    int newFinalDen = finalDen / gcd;
+
+    System.out.println("The new reduced fraction is: " + newFinalNum + "/" + newFinalDen);
+
+    return(newFinalNum & newFinalDen);
   }
 }
